@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PortOne from '@portone/browser-sdk/v2';
-	import axios from 'axios';
+	import axios, { AxiosError } from 'axios';
 
 	//해당 주문 정보는 백엔드에 http 요청을 보내서 조회해야 함.
 	//예시 코드에서는 하드코딩되어 있음.
@@ -30,18 +30,24 @@
 			alert(`결제 요청 실패: ${response.message}`);
 			return;
 		} else {
-			const payment = await checkPayment({
-				paymentId: response?.paymentId as string,
-				order: {
-					orderName,
-					currency,
-					payMethod: 'EASY_PAY',
-					amount: totalAmount
-				}
-			});
+			try {
+				const payment = await checkPayment({
+					paymentId: response?.paymentId as string,
+					order: {
+						orderName,
+						currency,
+						payMethod: 'EASY_PAY',
+						totalAmount
+					}
+				});
 
-			if (payment.status == 'OK') {
-				alert('결제 성공!');
+				if (payment.status == 'OK') {
+					alert('결제 성공!');
+				}
+			} catch (error) {
+				if (error instanceof AxiosError) {
+					alert(`결제 요청 실패: ${error.response?.data.message}`);
+				}
 			}
 		}
 	}
@@ -66,19 +72,24 @@
 			alert(`결제 요청 실패: ${response.message}`);
 			return;
 		} else {
-			console.log(response);
-			const payment = await checkPayment({
-				paymentId: response?.paymentId as string,
-				order: {
-					orderName,
-					currency,
-					payMethod: 'CARD',
-					amount: totalAmount
-				}
-			});
+			try {
+				const payment = await checkPayment({
+					paymentId: response?.paymentId as string,
+					order: {
+						orderName,
+						currency,
+						payMethod: 'CARD',
+						totalAmount
+					}
+				});
 
-			if (payment.status == 'OK') {
-				alert('결제 성공!');
+				if (payment.status == 'OK') {
+					alert('결제 성공!');
+				}
+			} catch (error) {
+				if (error instanceof AxiosError) {
+					alert(`결제 요청 실패: ${error.response?.data.message}`);
+				}
 			}
 		}
 	}
@@ -95,7 +106,7 @@
 				orderName: string;
 				currency: string;
 				payMethod: string;
-				amount: number;
+				totalAmount: number;
 			}
 		) {
 			this.paymentId = paymentId;
@@ -106,7 +117,7 @@
 			orderName: string;
 			currency: string;
 			payMethod: string;
-			amount: number;
+			totalAmount: number;
 		};
 	}
 </script>
