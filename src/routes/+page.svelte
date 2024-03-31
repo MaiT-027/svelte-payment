@@ -14,7 +14,7 @@
 	async function requestKakaoPayment() {
 		const response = await PortOne.requestPayment({
 			storeId: import.meta.env.VITE_STORE_ID,
-			channelKey: import.meta.env.VITE_CHANNEL_KEY,
+			channelKey: import.meta.env.VITE_KAKAO_CHANNEL_KEY,
 			paymentId: `payment-${crypto.randomUUID()}`,
 			orderName,
 			isTestChannel: true,
@@ -55,7 +55,7 @@
 		const response = await PortOne.requestPayment({
 			storeId: import.meta.env.VITE_STORE_ID,
 			// 채널 키 설정
-			channelKey: import.meta.env.VITE_CHANNEL_KEY,
+			channelKey: import.meta.env.VITE_CARD_CHANNEL_KEY,
 			paymentId: `payment-${crypto.randomUUID()}`,
 			orderName,
 			isTestChannel: true,
